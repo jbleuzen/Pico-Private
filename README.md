@@ -5,7 +5,7 @@ Provide an authentication form to keep your site private.
 ## Install
 
 1. Download a copy and extract the folder `pico_private` in your `plugins` folder,
-2. [Setup your theme](#setup_your_theme),
+2. [Setup your theme](#setup-your-theme),
 3. Test everything is working with user "admin" and password "admin",
 4. Open the `pico_private_pass.php` file and insert your users and theirs password,
 5. **REMOVE admin user**.
@@ -32,7 +32,7 @@ Users are stored in an associative array :
 
 All you need to do is create inside your theme's folder a `login.html` page which will display the login form. The form is pretty simple : 
 
-````twig
+````html
 <form method="post" action="">
    {% if login_error %}<p class="error">{{ login_error }}</p>{% endif %}
    <input type="text" name="username" id="username" placeholder="Username"/>
