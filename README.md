@@ -35,7 +35,7 @@ All you need to do is create inside your theme's folder a `login.html` page whic
 ````html
 <form method="post" action="">
    {% if login_error %}<p class="error">{{ login_error }}</p>{% endif %}
-   <input type="text" name="username" id="username" placeholder="Username"/>
+   <input type="text" name="username" id="username" placeholder="Username" value="{{ username }}"/>
    <input type="password" name="password" id="password" placeholder="Password"/>
    <input class="alignright" type="submit" value="Login" />
 </form>

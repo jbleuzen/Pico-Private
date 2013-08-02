@@ -57,6 +57,7 @@ class Pico_Private {
           $this->redirect_home();
         } else {
           $twig_vars['login_error'] = 'Invalid login';
+          $twig_vars['username'] = $postUsername;
         }
       }
 
