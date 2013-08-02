@@ -1,6 +1,6 @@
 # Pico Private Plugin
 
-Provide an authentication form to keep your site private.
+Provide an authentication form to keep your [Pico](http://pico.dev7studios.com/) site private.
 
 ## Install
 
@@ -10,6 +10,8 @@ Provide an authentication form to keep your site private.
 4. Open the `pico_private_pass.php` file and insert your users and theirs password,
 5. **REMOVE admin user**.
 
+Pico executes plugins by alphabetical order. If we want to protect all our URLs even those generated from plugins, we must execute Pico Private first.
+In order to execute Pico Private first, it's a good idea to prepend the folder's name with an underscore like `_pico_private`.
 
 ## How it works
 
@@ -45,5 +47,5 @@ Then it's up to you to style the form to match your site design.
 
 When the user is logged_in, the plugin adds two variables to the `$twig_vars`, that you can use in your theme : 
 
-* `authed` : Is user logged_in (boolean)
-* `username` : The username (string)
+* `{{ authed }}` : Is user logged_in (boolean)
+* `{{ username }}` : The username (string)
