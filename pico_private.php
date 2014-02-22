@@ -74,12 +74,12 @@ class Pico_Private {
   }
 
   private function redirect_home() {
-    header('Location: /'); 
+    header('Location: ./'); 
     exit;
   }
 
   private function redirect_login() {
-    header('Location: /login'); 
+    header('Location: ./login'); 
     exit;
   }
 
