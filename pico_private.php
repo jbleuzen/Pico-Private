@@ -66,17 +66,17 @@ class Pico_Private {
   }
 
   private function redirect_home() {
-    header('Location: /pico/'); 
+    header('Location: ./'); 
     exit;
   }
 
   private function redirect_login() {
-    header('Location: /pico/login'); 
+    header('Location: ./login'); 
     exit;
   }
 
   private function redirect_target(&$url) {
-    header('Location: /pico/'.$url);
+    header('Location: ./'.$url);
     exit;
   }
 
