@@ -32,9 +32,12 @@ Users are stored in an associative array :
 
 ### Setup your theme
 
-If you want to protect **all pages** you have to alter your main template file (usually index.html). 
+
+#### Protect all pages
+If you want to protect all pages you have to alter your main template file (usually index.html). 
+
 Find the "{{content}}" part and add change it to:
-````html
+```html
 {% if authed %}
     {{ content }}
 {% else %}
@@ -47,13 +50,17 @@ Find the "{{content}}" part and add change it to:
 {% endif %}
 ```
 
-If you want to protect **single pages** duplicate your main template file, rename it to "private.html" and add the same lines as above.
+#### Protect different parts of the pages
+You could also protect other parts of the page, e.g. the whole body, or only a little spoiler area.
+
+
+#### Protect some pages
+If you want to protect single pages duplicate your main template file, rename it to "private.html" and add the same lines as above.
 On every *.md file you want to protect:
 Add the following to the meta comment:
-````html
+```
 Template: private
-````
-
+```
 
 Then it's up to you to style the form to match your site design.
 

@@ -31,7 +31,6 @@ class Pico_Private {
       if($_SESSION['authed'] == false) {
         return;
       } else {
-        //$this->redirect_target($url);
         exit;
       }
     }
@@ -40,9 +39,6 @@ class Pico_Private {
       session_destroy();
       $this->redirect_home();
     }
-    /*if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-      $this->redirect_login();
-    }*/
   }
 
   public function before_render(&$twig_vars, &$twig) {
@@ -72,11 +68,6 @@ class Pico_Private {
 
   private function redirect_login() {
     header('Location: ./login'); 
-    exit;
-  }
-
-  private function redirect_target(&$url) {
-    header('Location: ./'.$url);
     exit;
   }
 
