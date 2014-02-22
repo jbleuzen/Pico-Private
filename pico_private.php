@@ -19,8 +19,6 @@ class Pico_Private {
       global $pico_private_passwords;
       include_once($plugin_path .'/pico_private_pass.php');
       $this->passwords = $pico_private_passwords;
-      $this->folders = $pico_private_folders;
-      $this->protected = false;
     }
   }
 
@@ -29,87 +27,56 @@ class Pico_Private {
   }
 
   public function request_url(&$url) {
-
     if($url == 'login') {
       if($_SESSION['authed'] == false) {
         return;
       } else {
-        $this->redirect_home();
+        //$this->redirect_target($url);
         exit;
       }
     }
 
     if($url == 'logout') {
       session_destroy();
-      $this->redirect_login();
+      $this->redirect_home();
     }
-
-    //which folder is requested?
-    // $folder = current( explode('/', $url,2) );
-    
-    // $this->protected = false;
-
-    //is the folder protected?
-    // foreach ($this->folders as &$check_folder) {
-    //   if($folder==$check_folder){
-    //     $this->protected=true;
-    //     break;
-    //   }
-    // }
-
-    // if($this->protected == true){
-    //   error_log("true", 0);
-          if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-            // $this->redirect_login();
-          }
-    // }
-
+    /*if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
+      $this->redirect_login();
+    }*/
   }
 
   public function before_render(&$twig_vars, &$twig) {
-
-    // error_log($this->protected, 0);
-
-    // if($this->protected == true){
-      
-      // error_log('!!!!!!!!!!!!!!!!!!!!!!', 0);
-
-
-      if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-        // shortHand $_POST variables
-        $postUsername = $_POST['username'];
-        $postPassword = $_POST['password'];
-        if(isset($postUsername) && isset($postPassword)) {
-          if(isset($this->passwords[$postUsername]) == true && $this->passwords[$postUsername] == sha1($postPassword)) {
-            $_SESSION['authed'] = true;
-            $_SESSION['username'] = $postUsername;
-            $this->redirect_home();
-          } else {
-            $twig_vars['login_error'] = 'Invalid login';
-            $twig_vars['username'] = $postUsername;
-          }
+    if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
+      // shortHand $_POST variables
+      $postUsername = $_POST['username'];
+      $postPassword = $_POST['password'];
+      if(isset($postUsername) && isset($postPassword)) {
+        if(isset($this->passwords[$postUsername]) == true && $this->passwords[$postUsername] == sha1($postPassword)) {
+          $_SESSION['authed'] = true;
+          $_SESSION['username'] = $postUsername;
+        } else {
+          $twig_vars['login_error'] = 'Invalid login';
+          $twig_vars['username'] = $postUsername;
         }
-
-        // header($_SERVER['SERVER_PROTOCOL'].' 200 OK');
-        // $loader = new Twig_Loader_Filesystem(THEMES_DIR . $this->theme);
-        // $twig_login = new Twig_Environment($loader, $twig_vars);   
-        // $twig_vars['meta']['title'] = "Login";
-        // echo $twig_login->render('login.html', $twig_vars);
-        // exit;
       }
+    }
 
-      $twig_vars['authed'] = $_SESSION['authed'];
-      $twig_vars['username'] =  $_SESSION['username'];
-    // }//protected
+    $twig_vars['authed'] = $_SESSION['authed'];
+    $twig_vars['username'] =  $_SESSION['username'];
   }
 
   private function redirect_home() {
-    header('Location: ./'); 
+    header('Location: /pico/'); 
     exit;
   }
 
   private function redirect_login() {
-    header('Location: ./login'); 
+    header('Location: /pico/login'); 
+    exit;
+  }
+
+  private function redirect_target(&$url) {
+    header('Location: /pico/'.$url);
     exit;
   }
 

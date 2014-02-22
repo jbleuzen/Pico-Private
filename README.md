@@ -1,6 +1,6 @@
 # Pico Private Plugin
 
-Provide an authentication form to keep your [Pico](http://pico.dev7studios.com/) site private.
+Provide an authentication form to keep your [Pico](http://pico.dev7studios.com/) site or parts of it private.
 
 ## Install
 
@@ -15,7 +15,7 @@ In order to execute Pico Private first, it's a good idea to prepend the folder's
 
 ## How it works
 
-The whole site will be "protected" behind a login form.
+The content of selected pages will only be visible after the user is sucessfully logged in.
 
 The plugin will display a login form when a user is not logged in.
 Once logged in, the user will be able to browse your website normally.
@@ -32,16 +32,28 @@ Users are stored in an associative array :
 
 ### Setup your theme
 
-All you need to do is create inside your theme's folder a `login.html` page which will display the login form. The form is pretty simple : 
-
+If you want to protect **all pages** you have to alter your main template file (usually index.html). 
+Find the "{{content}}" part and add change it to:
 ````html
-<form method="post" action="">
-   {% if login_error %}<p class="error">{{ login_error }}</p>{% endif %}
-   <input type="text" name="username" id="username" placeholder="Username" value="{{ username }}"/>
-   <input type="password" name="password" id="password" placeholder="Password"/>
-   <input class="alignright" type="submit" value="Login" />
-</form>
+{% if authed %}
+    {{ content }}
+{% else %}
+    <form method="post" action="">
+       {% if login_error %}<p class="error">{{ login_error }}</p>{% endif %}
+       <input type="text" name="username" id="username" placeholder="Username" value="{{ username }}"/>
+       <input type="password" name="password" id="password" placeholder="Password"/>
+       <input class="alignright" type="submit" value="Login" />
+    </form>
+{% endif %}
 ```
+
+If you want to protect **single pages** duplicate your main template file, rename it to "private.html" and add the same lines as above.
+On every *.md file you want to protect:
+Add the following to the meta comment:
+````html
+Template: private
+````
+
 
 Then it's up to you to style the form to match your site design.
 
