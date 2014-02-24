@@ -11,6 +11,8 @@ class Pico_Private {
 
   private $theme;
 
+  private $base_url;
+
   public function __construct() {
     $plugin_path = dirname(__FILE__);
     session_start();
@@ -24,6 +26,7 @@ class Pico_Private {
 
   public function config_loaded(&$settings) {
     $this->theme = $settings['theme'];
+    $this->base_url = $settings['base_url'];
   }
 
   public function request_url(&$url) {
@@ -78,12 +81,12 @@ class Pico_Private {
   }
 
   private function redirect_home() {
-    header('Location: /'); 
+    header('Location: '. $this->base_url . '/'); 
     exit;
   }
 
   private function redirect_login() {
-    header('Location: /login'); 
+    header('Location: '. $this->base_url . '/login'); 
     exit;
   }
 
