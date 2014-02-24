@@ -31,17 +31,13 @@ class Pico_Private {
       if($_SESSION['authed'] == false) {
         return;
       } else {
-        $this->redirect_home();
         exit;
       }
     }
 
     if($url == 'logout') {
       session_destroy();
-      $this->redirect_login();
-    }
-    if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-      $this->redirect_login();
+      $this->redirect_home();
     }
   }
 
@@ -54,19 +50,11 @@ class Pico_Private {
         if(isset($this->passwords[$postUsername]) == true && $this->passwords[$postUsername] == sha1($postPassword)) {
           $_SESSION['authed'] = true;
           $_SESSION['username'] = $postUsername;
-          $this->redirect_home();
         } else {
           $twig_vars['login_error'] = 'Invalid login';
           $twig_vars['username'] = $postUsername;
         }
       }
-
-      header($_SERVER['SERVER_PROTOCOL'].' 200 OK');
-      $loader = new Twig_Loader_Filesystem(THEMES_DIR . $this->theme);
-      $twig_login = new Twig_Environment($loader, $twig_vars);   
-      $twig_vars['meta']['title'] = "Login";
-      echo $twig_login->render('login.html', $twig_vars);
-      exit;
     }
 
     $twig_vars['authed'] = $_SESSION['authed'];
@@ -74,12 +62,12 @@ class Pico_Private {
   }
 
   private function redirect_home() {
-    header('Location: /'); 
+    header('Location: ./'); 
     exit;
   }
 
   private function redirect_login() {
-    header('Location: /login'); 
+    header('Location: ./login'); 
     exit;
   }
 
