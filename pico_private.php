@@ -9,85 +9,83 @@
  */
 class Pico_Private {
 
-  private $theme;
+   private $users;
 
-  private $base_url;
+   private $theme;
 
-  public function __construct() {
-    $plugin_path = dirname(__FILE__);
-    session_start();
+   private $base_url;
 
-    if(file_exists($plugin_path .'/pico_private_pass.php')){
-      global $pico_private_passwords;
-      include_once($plugin_path .'/pico_private_pass.php');
-      $this->passwords = $pico_private_passwords;
-    }
-  }
+   public function __construct() {
+      $plugin_path = dirname(__FILE__);
 
-  public function config_loaded(&$settings) {
-    $this->theme = $settings['theme'];
-    $this->base_url = $settings['base_url'];
-  }
+      if(file_exists($plugin_path .'/pico_private_conf.php')){
+         global $pico_private_conf;
+         include_once($plugin_path .'/pico_private_conf.php');
+         $this->users = $pico_private_conf['users'];
 
-  public function request_url(&$url) {
-    if($url == 'login') {
-      if(! isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-        return;
-      } else {
-        $this->redirect_home();
-        exit;
+         session_start();
       }
-    }
+   }
 
-    if($url == 'logout') {
-      session_destroy();
-      $this->redirect_login();
-    }
-    if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-      $this->redirect_login();
-    }
-  }
+   public function config_loaded(&$settings) {
+      $this->theme = $settings['theme'];
+      $this->base_url = $settings['base_url'];
+   }
 
-  public function before_render(&$twig_vars, &$twig) {
-    if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-       if(isset($_POST['username'])) {
-          $postUsername = $_POST['username'];
-       }
-       if(isset($_POST['password'])) {
-         $postPassword = $_POST['password'];
-       }
-
-      if(!empty($postUsername) && !empty($postPassword)) {
-        if(isset($this->passwords[$postUsername]) == true && $this->passwords[$postUsername] == sha1($postPassword)) {
-          $_SESSION['authed'] = true;
-          $_SESSION['username'] = $postUsername;
-          $this->redirect_home();
-        } else {
-          $twig_vars['login_error'] = 'Invalid login';
-          $twig_vars['username'] = $postUsername;
-        }
+   public function request_url(&$url) {
+      if($url == 'login') {
+         if(! isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
+            return;
+         } else {
+            $this->redirect('/');
+            exit;
+         }
       }
 
-      header($_SERVER['SERVER_PROTOCOL'].' 200 OK');
-      $loader = new Twig_Loader_Filesystem(THEMES_DIR . $this->theme);
-      $twig_login = new Twig_Environment($loader, $twig_vars);   
-      $twig_vars['meta']['title'] = "Login";
-      echo $twig_login->render('login.html', $twig_vars);
+      if($url == 'logout') {
+         session_destroy();
+         $this->redirect('/login');
+      }
+      if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
+         $this->redirect('/login');
+      }
+   }
+
+   public function before_render(&$twig_vars, &$twig) {
+      if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
+         if(isset($_POST['username'])) {
+            $postUsername = $_POST['username'];
+         }
+         if(isset($_POST['password'])) {
+            $postPassword = $_POST['password'];
+         }
+
+         if(!empty($postUsername) && !empty($postPassword)) {
+            if(isset($this->users[$postUsername]) == true && $this->users[$postUsername] == sha1($postPassword)) {
+               $_SESSION['authed'] = true;
+               $_SESSION['username'] = $postUsername;
+               $this->redirect('/');
+            } else {
+               $twig_vars['login_error'] = 'Invalid login';
+               $twig_vars['username'] = $postUsername;
+            }
+         }
+
+         header($_SERVER['SERVER_PROTOCOL'].' 200 OK');
+         $loader = new Twig_Loader_Filesystem(THEMES_DIR . $this->theme);
+         $twig_login = new Twig_Environment($loader, $twig_vars);   
+         $twig_vars['meta']['title'] = "Login";
+         echo $twig_login->render('login.html', $twig_vars);
+         exit;
+      }
+
+      $twig_vars['authed'] = $_SESSION['authed'];
+      $twig_vars['username'] =  $_SESSION['username'];
+   }
+
+   private function redirect($url) {
+      header('Location: '. $this->base_url . $url); 
       exit;
-    }
-
-    $twig_vars['authed'] = $_SESSION['authed'];
-    $twig_vars['username'] =  $_SESSION['username'];
-  }
-
-  private function redirect_home() {
-    header('Location: '. $this->base_url . '/'); 
-    exit;
-  }
-
-  private function redirect_login() {
-    header('Location: '. $this->base_url . '/login'); 
-    exit;
-  }
+   }
 
 }
