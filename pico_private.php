@@ -28,7 +28,7 @@ class Pico_Private {
 
   public function request_url(&$url) {
     if($url == 'login') {
-      if($_SESSION['authed'] == false) {
+      if(! isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
         return;
       } else {
         $this->redirect_home();
@@ -47,10 +47,14 @@ class Pico_Private {
 
   public function before_render(&$twig_vars, &$twig) {
     if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-      // shortHand $_POST variables
-      $postUsername = $_POST['username'];
-      $postPassword = $_POST['password'];
-      if(isset($postUsername) && isset($postPassword)) {
+       if(isset($_POST['username'])) {
+          $postUsername = $_POST['username'];
+       }
+       if(isset($_POST['password'])) {
+         $postPassword = $_POST['password'];
+       }
+
+      if(!empty($postUsername) && !empty($postPassword)) {
         if(isset($this->passwords[$postUsername]) == true && $this->passwords[$postUsername] == sha1($postPassword)) {
           $_SESSION['authed'] = true;
           $_SESSION['username'] = $postUsername;
