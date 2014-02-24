@@ -49,3 +49,15 @@ When the user is logged_in, the plugin adds two variables to the `$twig_vars`, t
 
 * `{{ authed }}` : Is user logged_in (boolean)
 * `{{ username }}` : The username (string)
+
+### No Username
+If a single password is secure enough for your needs the easiest way is to change those two lines:
+
+In your template file replace the username input field with:
+```html
+<input type="hidden" name="username" id="username" value="no_user"/>
+```
+in the pico_private_pass.php file add:
+```php
+$pico_private_passwords['no_user'] = '-hashedpw-';
+```
