@@ -1,6 +1,6 @@
 # Pico Private Plugin
 
-Provide an authentication form to keep your [Pico](http://pico.dev7studios.com/) site private.
+Provide an authentication form to keep your [Pico](http://pico.dev7studios.com/) site or part of it private.
 
 ## Install
 
@@ -15,13 +15,24 @@ In order to execute Pico Private first, it's a good idea to prepend the folder's
 
 ## How it works
 
-The whole site will be "protected" behind a login form.
+By default, the whole site will be "protected" behind a login form, but it's possible to keep just some content private.
 
-The plugin will display a login form when a user is not logged in.
+The plugin will display a login form when a user cannot access content without being identified.
 Once logged in, the user will be able to browse your website normally.
 
-Users and passwords are stored in `pico_private_pass.php` and you can add as many users you want.
+Users and passwords are stored in `pico_private_conf.php` and you can add as many users you want.
 Passwords must be a SHA1 string.
+
+## Keep some part private
+
+If you don't want the whole site to be private, you can change the configuration in `pico_private_conf.php`. The variable `$pico_private_conf['config']['private']` can take two values : 
+
+* "all" : The whole site is private
+* "meta" : Only content with meta `Private: true` will be private.
+
+Keep in mind that once a user is identified, he can access every contents with private meta !
+
+## Configuration
 
 ### Add users
 
@@ -35,11 +46,12 @@ Users are stored in an associative array :
 All you need to do is create inside your theme's folder a `login.html` page which will display the login form. The form is pretty simple : 
 
 ````html
-<form method="post" action="">
+<form method="post">
    {% if login_error %}<p class="error">{{ login_error }}</p>{% endif %}
    <input type="text" name="username" id="username" placeholder="Username" value="{{ username }}"/>
    <input type="password" name="password" id="password" placeholder="Password"/>
    <input class="alignright" type="submit" value="Login" />
+   {% if redirect_url %}<input type="hidden" name="redirect_url" value="{{ redirect_url }}"/>{% endif %}
 </form>
 ```
 
@@ -50,14 +62,18 @@ When the user is logged_in, the plugin adds two variables to the `$twig_vars`, t
 * `{{ authed }}` : Is user logged_in (boolean)
 * `{{ username }}` : The username (string)
 
-### No Username
+### Password only mode
+
 If a single password is secure enough for your needs the easiest way is to change those two lines:
 
 In your template file replace the username input field with:
+
 ```html
 <input type="hidden" name="username" id="username" value="no_user"/>
 ```
-in the pico_private_pass.php file add:
+
+In the pico_private_pass.php file add:
+
 ```php
-$pico_private_passwords['no_user'] = '-hashedpw-';
+$pico_private_conf['users']['no_user'] = '-hashedpw-';
 ```
