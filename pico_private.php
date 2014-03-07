@@ -111,9 +111,13 @@ class Pico_Private {
       $loader = new Twig_Loader_Filesystem(THEMES_DIR . $this->theme);
       $twig_login = new Twig_Environment($loader, $twig_vars);   
       $twig_vars['meta']['title'] = "Login";
-      echo $twig_login->render('login.html', $twig_vars);
+      if(file_exists(THEMES_DIR . $this->theme . "/login.html")) {
+        echo $twig_login->render('login.html', $twig_vars);
+      } else {
+        echo '<h1>Pico private error</h1>';
+        echo '<h2>No "login.html" file found in theme ' . $this->theme;
+      }
       exit;
-
    }
 
 }
