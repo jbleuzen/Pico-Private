@@ -42,7 +42,7 @@ class Pico_Private {
       if($this->config['private'] == 'all') {
          if($url == 'login') {
             if(! isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-               return;
+              return;
             } else {
                $this->redirect('/');
                exit;
@@ -50,7 +50,7 @@ class Pico_Private {
          }
 
          if(!isset($_SESSION['authed']) || $_SESSION['authed'] == false) {
-            $this->redirect('/');
+            $this->redirect('/login');
          }
       }
       if($url == 'logout') {
