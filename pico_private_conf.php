@@ -1,5 +1,6 @@
 <?php
 
+global $pico_private_conf;
 /*
  * "Private" setting can take 2 values :
  * - all : the whole site is private
@@ -13,4 +14,3 @@ $pico_private_conf['config']['private'] = "meta";
  */
 $pico_private_conf['users']['admin'] = 'd033e22ae348aeb5660fc2140aec35850c4da997';
 
-?>
