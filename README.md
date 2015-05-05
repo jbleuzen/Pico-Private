@@ -21,7 +21,7 @@ The plugin will display a login form when a user cannot access content without b
 Once logged in, the user will be able to browse your website normally.
 
 Users and passwords are stored in `pico_private_conf.php` and you can add as many users you want.
-Passwords must be a SHA1 string.
+Passwords must be a SHA1 or bcrypt string.
 
 ## Keep some part private
 
@@ -33,6 +33,10 @@ If you don't want the whole site to be private, you can change the configuration
 Keep in mind that once a user is identified, he can access every contents with private meta !
 
 ## Configuration
+
+### Set Hashing Algorithm
+
+Either SHA1 or bcrypt may be used.  bcrypt requires the password_verify function available in PHP 5.5, or PHP >= 5.3.7 with https://github.com/ircmaxell/password_compat
 
 ### Add users
 
