@@ -22,7 +22,7 @@ class Pico_Private {
    public function __construct() {
       $plugin_path = dirname(__FILE__);
 
-      if(file_exists($plugin_path .'/pico_private_conf.php')){
+      if(file_exists($plugin_path .'/pico_private_conf.php')) {
          global $pico_private_conf;
          include_once($plugin_path .'/pico_private_conf.php');
          $this->config = $pico_private_conf['config'];
@@ -69,7 +69,7 @@ class Pico_Private {
       }
 
       $privateMeta = $twig_vars['meta']['private'];
-      if((!isset($_SESSION['authed']) || $_SESSION['authed'] == false) && $this->config['private'] == "meta" && $privateMeta == true){
+      if((!isset($_SESSION['authed']) || $_SESSION['authed'] == false) && $this->config['private'] == "meta" && $privateMeta == true) {
          $twig_vars['redirect_url'] = "/" . $this->url;
          $this->handleLogin($twig_vars, $twig);
       }
@@ -94,7 +94,18 @@ class Pico_Private {
       }
 
       if(!empty($postUsername) && !empty($postPassword)) {
-         if(isset($this->users[$postUsername]) == true && $this->users[$postUsername] == sha1($postPassword)) {
+         $authenticated = false;
+         if($this->config['hash_type'] == 'sha1') {
+            if(isset($this->users[$postUsername]) == true && ($this->users[$postUsername] == sha1($postPassword))) {
+               $authenticated = true;
+            }
+         } else if($this->config['hash_type'] == 'bcrypt') {
+            if(isset($this->users[$postUsername]) == true && password_verify($postPassword, $this->users[$postUsername])) {
+               $authenticated = true;
+            }
+         }
+
+         if($authenticated == true) {
             $_SESSION['authed'] = true;
             $_SESSION['username'] = $postUsername;
             if(isset($_POST['redirect_url'])) {
